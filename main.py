@@ -37,6 +37,9 @@ class DashboardFrame(wx.Frame):
         hbox.Add(self.snipBtn,0,wx.ALIGN_CENTER)
         hbox.AddStretchSpacer()
         self.panel.SetSizer(hbox)
+    
+    def onInit(self):
+        self.parent.image_frame = EditImageFrame(self.parent,title='FP-Helper')
 
     def onClickedUpload(self,event):
         fileDialog = wx.FileDialog(self, "Open PNG file", wildcard="PNG files (*.png)|*.png",style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)

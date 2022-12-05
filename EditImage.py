@@ -96,9 +96,8 @@ class EditImageFrame(wx.Frame):
     def onNewBtn(self,event):
         self.Hide()
         self.Destroy()
+        self.parent.dashboard_frame.onInit()
         self.parent.dashboard_frame.Show()
-        # self.dashboard_frame.ShowFullScreen(True)
-        # self.parent.SetTopWindow(self.dashboard_frame)
 
 class Stamping:
 
@@ -161,9 +160,18 @@ class Stamping:
                 dc.DrawCircle(pnt,self.radius)
                 offset = dc.GetTextExtent(str(index+1))
                 dc.DrawText(str(index+1),pnt.x-offset.x/2,pnt.y-offset.y/2)
-        fname = "Edited_SS{}.png".format(int(round(time.time()*1000)))
-        saveimg.SaveFile("output/"+fname,wx.BITMAP_TYPE_PNG)
+        self.save(saveimg)
         
+    def save(self,saveimg):
+        fname = "Edited_SS{}.png".format(int(round(time.time()*1000)))
+        
+        fileDialog = wx.FileDialog(self.parent, "Save PNG file",defaultDir='output/',defaultFile= fname,wildcard="PNG files (*.png)|*.png",style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+
+        if fileDialog.ShowModal() == wx.ID_CANCEL:
+            return
+
+        pathname = fileDialog.GetPath()
+        saveimg.SaveFile(pathname,wx.BITMAP_TYPE_PNG)
         
     def initColors(self):
         stampColors = []
