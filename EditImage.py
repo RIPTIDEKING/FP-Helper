@@ -1,4 +1,5 @@
 import wx
+import wx.lib.scrolledpanel
 import time
 
 class EditImageFrame(wx.Frame):
@@ -27,7 +28,9 @@ class EditImageFrame(wx.Frame):
 
 
     def imgPanelCreate(self,img):
-        imgPanel = wx.Panel(self.bgpanel)
+        # imgPanel = wx.Panel(self.bgpanel)
+        imgPanel = wx.lib.scrolledpanel.ScrolledPanel(self.bgpanel)
+        imgPanel.SetupScrolling()
 
         editableImagePanel = wx.Panel(imgPanel,size = img.GetSize())
         editableImagePanel.Bind(wx.EVT_LEFT_DOWN,self.onStamping)
