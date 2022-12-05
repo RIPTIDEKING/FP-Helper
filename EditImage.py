@@ -29,7 +29,6 @@ class EditImageFrame(wx.Frame):
     def imgPanelCreate(self,img):
         imgPanel = wx.Panel(self.bgpanel)
 
-        # editableImage = wx.StaticBitmap(imgPanel,bitmap =img,style = wx.ALIGN_CENTRE_HORIZONTAL)
         editableImagePanel = wx.Panel(imgPanel,size = img.GetSize())
         editableImagePanel.Bind(wx.EVT_LEFT_DOWN,self.onStamping)
         self.stamping = Stamping(editableImagePanel,img)
@@ -54,8 +53,8 @@ class EditImageFrame(wx.Frame):
         stampColor = wx.ComboBox(optionsPanel,value = 'Green',choices = self.stamping.colors)
         stampColor.Bind(wx.EVT_COMBOBOX,self.onColorSelect)
 
-        # newBtn = wx.Button(optionsPanel,label = 'New Image')
-        # newBtn.Bind(wx.EVT_BUTTON,self.onNewBtn)
+        newBtn = wx.Button(optionsPanel,label = 'New Image')
+        newBtn.Bind(wx.EVT_BUTTON,self.onNewBtn)
 
         saveBtn = wx.Button(optionsPanel,label = 'Save')
         saveBtn.Bind(wx.EVT_BUTTON,self.stamping.OnSave)
@@ -69,8 +68,8 @@ class EditImageFrame(wx.Frame):
         hor_box.Add(stampColor,0,wx.ALIGN_CENTER)
         hor_box.AddSpacer(20)
         hor_box.Add(saveBtn,0,wx.ALIGN_CENTER)
-        # hor_box.AddSpacer(20)
-        # hor_box.Add(newBtn,0,wx.ALIGN_CENTER)
+        hor_box.AddSpacer(20)
+        hor_box.Add(newBtn,0,wx.ALIGN_CENTER)
         hor_box.AddStretchSpacer()
         optionsPanel.SetSizer(hor_box)
 
@@ -96,7 +95,8 @@ class EditImageFrame(wx.Frame):
     
     def onNewBtn(self,event):
         self.Hide()
-        self.dashboard_frame.Show()
+        self.Destroy()
+        self.parent.dashboard_frame.Show()
         # self.dashboard_frame.ShowFullScreen(True)
         # self.parent.SetTopWindow(self.dashboard_frame)
 
@@ -119,6 +119,7 @@ class Stamping:
             self.cords.append(temp)
 
         self.selected = 0
+    
 
     def addStamp(self,cord):
         self.cords[self.selected].append(cord)

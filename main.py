@@ -25,7 +25,7 @@ class DashboardFrame(wx.Frame):
 
         self.panel = wx.Panel(self)
         self.uploadBtn = wx.Button(self.panel,label = 'Upload')
-
+        self.uploadBtn.Bind(wx.EVT_BUTTON,self.onClickedUpload)
         
         self.snipBtn = wx.Button(self.panel,label = 'Snip')
         self.snipBtn.Bind(wx.EVT_BUTTON,self.onClickedSnip)
@@ -38,11 +38,36 @@ class DashboardFrame(wx.Frame):
         hbox.AddStretchSpacer()
         self.panel.SetSizer(hbox)
 
+    def onClickedUpload(self,event):
+        fileDialog = wx.FileDialog(self, "Open PNG file", wildcard="PNG files (*.png)|*.png",style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+
+        if fileDialog.ShowModal() == wx.ID_CANCEL:
+            return     
+
+        
+        pathname = fileDialog.GetPath()
+
+        try:
+            ssImage = wx.Bitmap(pathname, wx.BITMAP_TYPE_ANY)
+            self.parent.image_frame.showImage(ssImage)
+        except IOError:
+            wx.LogError("Cannot open file '%s'." % pathname)
+
     def onClickedSnip(self,event):
         self.Hide()
-        self.ss_frame.ShowFullScreen(True)
-        self.ss_frame.SetTransparent(50)
-        self.parent.SetTopWindow(self.ss_frame)
+        print(self.parent.ss_frame.IsFullScreen())
+
+        if not self.parent.ss_frame.IsFullScreen():
+            self.parent.ss_frame.ShowFullScreen(not self.parent.ss_frame.IsFullScreen())        
+            self.parent.ss_frame.SetTransparent(50)
+            self.parent.SetTopWindow(self.parent.ss_frame)
+        else:
+            self.parent.ss_frame.Show()
+            self.parent.ss_frame.SetTransparent(50)
+            self.parent.SetTopWindow(self.parent.ss_frame)
+            self.parent.ss_frame.onInit()
+        
+
 
 
 class MyApp(wx.App):
@@ -52,9 +77,9 @@ class MyApp(wx.App):
         self.ss_frame = SnipFrame(self,title='FP-Helper')
         self.image_frame = EditImageFrame(self,title='FP-Helper')
 
-        self.dashboard_frame.ss_frame = self.ss_frame
-        self.ss_frame.image_frame = self.image_frame
-        self.image_frame.dashboard_frame = self.dashboard_frame
+        # self.dashboard_frame.ss_frame = self.ss_frame
+        # self.ss_frame.image_frame = self.image_frame
+        # self.image_frame.dashboard_frame = self.dashboard_frame
         
         self.dashboard_frame.Show()
         # self.dashboard_frame.ShowFullScreen(True)

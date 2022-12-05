@@ -1,10 +1,11 @@
 import wx
 import PIL
+from EditImage import EditImageFrame
 
 class SnipFrame(wx.Frame):
 
     def __init__(self, parent = None, title = ""):
-        super().__init__(None,title = title)
+        super().__init__(None,title = title,size = wx.DisplaySize())
 
         self.parent = parent
         self.Bind(wx.EVT_CLOSE,self.parent.onClose)
@@ -20,6 +21,12 @@ class SnipFrame(wx.Frame):
         self.panel.Bind(wx.EVT_LEFT_UP,self.endCapture)
         self.panel.Bind(wx.EVT_PAINT, self.OnPaint)
 
+    def onInit(self):
+        self.startPos = None
+        self.endPos = None
+
+        self.beginCapture = False
+        self.parent.image_frame = EditImageFrame(self.parent,title='FP-Helper')
 
     def dragMouse(self,event):
 
@@ -33,10 +40,8 @@ class SnipFrame(wx.Frame):
 
     def endCapture(self,event):
         self.endPos = event.GetPosition()
-        print(self.startPos)
-        print(self.endPos)
         self.grabScreenShot()
-        self.Destroy()
+        # self.Destroy()
 
     def OnPaint(self, event):
         if not self.beginCapture: return
@@ -49,8 +54,6 @@ class SnipFrame(wx.Frame):
 
 
     def grabScreenShot(self):
-        savePath = 'output/my_image.png'
-
         self.SetTransparent(0)
 
         screenShot = PIL.ImageGrab.grab()
@@ -63,6 +66,6 @@ class SnipFrame(wx.Frame):
         ssImage = wx.Bitmap(ssImage)
 
         self.Hide()
-        self.image_frame.showImage(ssImage)
+        self.parent.image_frame.showImage(ssImage)
         # screenshot.save(savePath, 'PNG')   
         
